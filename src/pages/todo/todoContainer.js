@@ -7,7 +7,7 @@ import {
   editTodoList,
   deleteTodoItem
 } from "./redux/todoAction";
-import TaskList from "./../../components/taskList";
+import { Button, Form, Grid, Message, Segment, Table } from "semantic-ui-react";
 
 class TodoPage extends Component {
   constructor(props) {
@@ -34,10 +34,11 @@ class TodoPage extends Component {
     });
   }
 
-  onUserAction(event) {
+  onUserAction(event, data) {
     const { name, value } = event.target;
-    if (event.target.name == "isComplete") {
-      this.setState({ isComplete: event.target.checked });
+    if (data.type == "checkbox") {
+      this.setState({ isComplete: data.checked });
+      console.log(this.state);
     } else {
       this.setState({ [name]: value });
     }
@@ -45,7 +46,9 @@ class TodoPage extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    event.target.reset();
     if (this.state.isEditing) {
+      console.log(this.state);
       const { editItemId, editItem, isComplete } = this.state;
       this.props.editTodoList({ editItemId, editItem, isComplete });
     } else {
@@ -74,77 +77,122 @@ class TodoPage extends Component {
     const { isComplete } = this.props;
     return (
       <div>
-        <form onSubmit={this.handleSubmit}>
-          <label>Todo</label>
-          <input
-            onChange={this.onUserAction}
-            type="text"
-            name="todoItem"
-            value={todoItem}
-          />
-          <button>Submit</button>
-        </form>
+        <div className="todo-form">
+          <style>{`
+      body > div,
+      body > div > div,
+      body > div > div > div.todo-form {
+        height: 100%;
+      }
+    `}</style>
+          <Grid
+            textAlign="center"
+            style={{ height: "100%" }}
+            verticalAlign="middle"
+          >
+            <Grid.Column style={{ maxWidth: 700 }}>
+              <Form size="large" onSubmit={this.handleSubmit}>
+                <Segment stacked>
+                  <Form.Input
+                    fluid
+                    placeholder="Enter the Todo item"
+                    onChange={this.onUserAction}
+                    type="text"
+                    name="todoItem"
+                    value={todoItem}
+                  />
+                  <Button color="teal" fluid size="large">
+                    Add
+                  </Button>
+                </Segment>
+              </Form>
 
-        <table>
-          <tbody>
-            {this.props.todos.map((v, k) => {
-              var editTodoItem = v.todoItem;
-              return (
-                <tr key={k}>
-                  {this.state.isEditing &&
-                  v.id == this.state.editItemId &&
-                  v.isComplete ? (
-                    <td>
-                      <form onSubmit={this.handleSubmit}>
-                        <input
-                          onChange={this.onUserAction}
-                          type="text"
-                          name="editItem"
-                          value={this.state.editItem}
-                        />
-                        <input
-                          onChange={this.onUserAction}
-                          type="checkbox"
-                          name="isComplete"
-                        />
-                        <label>Completed</label>
-                        <button>Update</button>
-                      </form>
-                    </td>
-                  ) : (
-                    <div>
-                      <td />
-                      <td>{v.todoItem}</td>
-                      <td>
-                        <button onClick={() => this.onEdit(v)}>edit</button>
-                      </td>
-                      <button onClick={() => this.onDelete(v.id)}>
-                        Delete
-                      </button>
-                    </div>
-                  )}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              <Table celled striped>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell colSpan="3">Todo List</Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                  {this.props.todos.map((v, k) => {
+                    if (!v.isComplete) {
+                      return (
+                        <Table.Row key={k}>
+                          {this.state.isEditing &&
+                          v.id == this.state.editItemId ? (
+                            <Table.Cell colspan="3">
+                              <Form size="small" onSubmit={this.handleSubmit}>
+                                <Form.Input
+                                  fluid
+                                  placeholder="Enter the Todo item"
+                                  onChange={this.onUserAction}
+                                  type="text"
+                                  name="editItem"
+                                  value={this.state.editItem}
+                                />
+                                <Form.Checkbox
+                                  label="Done"
+                                  onChange={this.onUserAction}
+                                />
 
-        <table>
-          <thead>
-            <th>Completed Items</th>
-          </thead>
-          <tbody>
-            {this.props.todos.map((v, k) => {
-              return (
-                <tr key={k}>
-                  <td>{v.todoItem}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                                <Button color="teal" fluid size="large">
+                                  Update
+                                </Button>
+                              </Form>
+                            </Table.Cell>
+                          ) : (
+                            <React.Fragment>
+                              <Table.Cell>{v.todoItem}</Table.Cell>
+                              <Table.Cell>
+                                <Button
+                                  color="teal"
+                                  onClick={() => this.onEdit(v)}
+                                  fluid
+                                  size="large"
+                                >
+                                  Edit
+                                </Button>
+                              </Table.Cell>
+                              <Table.Cell>
+                                <Button
+                                  color="teal"
+                                  onClick={() => this.onDelete(v.id)}
+                                  fluid
+                                  size="large"
+                                >
+                                  Delete
+                                </Button>
+                              </Table.Cell>
+                            </React.Fragment>
+                          )}
+                        </Table.Row>
+                      );
+                    }
+                  })}
+                </Table.Body>
+              </Table>
 
-        <TaskList />
+              <Table celled striped>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell colSpan="3">Todo List</Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                  {this.props.todos.map((v, k) => {
+                    if (v.isComplete) {
+                      return (
+                        <Table.Row key={k}>
+                          <Table.Cell collapsing>{v.todoItem}</Table.Cell>
+                        </Table.Row>
+                      );
+                    }
+                  })}
+                </Table.Body>
+              </Table>
+            </Grid.Column>
+          </Grid>
+        </div>
       </div>
     );
   }
