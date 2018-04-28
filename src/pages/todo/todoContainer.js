@@ -7,8 +7,8 @@ import {
   editTodoList,
   deleteTodoItem
 } from "./redux/todoAction";
-import { Button, Form, Grid, Message, Segment, Table } from "semantic-ui-react";
-
+import { Button, Form, Grid, Segment, Table } from "semantic-ui-react";
+/*eslint-disable array-callback-return*/
 class TodoPage extends Component {
   constructor(props) {
     super(props);
@@ -36,9 +36,8 @@ class TodoPage extends Component {
 
   onUserAction(event, data) {
     const { name, value } = event.target;
-    if (data.type == "checkbox") {
+    if (data.type === "checkbox") {
       this.setState({ isComplete: data.checked });
-      console.log(this.state);
     } else {
       this.setState({ [name]: value });
     }
@@ -46,15 +45,16 @@ class TodoPage extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    event.target.reset();
     if (this.state.isEditing) {
-      console.log(this.state);
       const { editItemId, editItem, isComplete } = this.state;
       this.props.editTodoList({ editItemId, editItem, isComplete });
     } else {
       this.props.addTodoItem({
         todoItem: this.state.todoItem,
         isComplete: this.props.isComplete
+      });
+      this.setState({
+        todoItem: ""
       });
     }
   }
@@ -72,9 +72,7 @@ class TodoPage extends Component {
   }
 
   render() {
-    console.log(this.props);
     const { todoItem } = this.state;
-    const { isComplete } = this.props;
     return (
       <div>
         <div className="todo-form">
@@ -119,7 +117,7 @@ class TodoPage extends Component {
                       return (
                         <Table.Row key={k}>
                           {this.state.isEditing &&
-                          v.id == this.state.editItemId ? (
+                          v.id === this.state.editItemId ? (
                             <Table.Cell colspan="3">
                               <Form size="small" onSubmit={this.handleSubmit}>
                                 <Form.Input
@@ -183,7 +181,11 @@ class TodoPage extends Component {
                     if (v.isComplete) {
                       return (
                         <Table.Row key={k}>
-                          <Table.Cell collapsing>{v.todoItem}</Table.Cell>
+                          <Table.Cell collapsing>
+                            <span style={{ textDecoration: "line-through" }}>
+                              {v.todoItem}
+                            </span>
+                          </Table.Cell>
                         </Table.Row>
                       );
                     }

@@ -1,20 +1,18 @@
 import { takeEvery, takeLatest, put, call } from "redux-saga/effects";
-import { push } from "react-router-redux";
 import axios from "axios";
-import { getTodoList, gotTodoList, addedTodo } from "./todoAction";
+import { getTodoList, gotTodoList } from "./todoAction";
 import { getApiCall } from "./../../../utils/api";
 
 import {
   ADD_TODO,
   GET_TODO_LIST,
-  GOT_TODO_LIST,
   EDIT_TODO_LIST,
   DELETE_TODO_ITEM
 } from "./todoAction";
 
 function* addTodoWorker({ payload }) {
   try {
-    const res = yield axios.post("http://localhost:3001/todoList/", payload);
+    yield axios.post("http://localhost:3001/todoList/", payload);
     yield put(getTodoList());
   } catch (e) {
     console.log(e);
@@ -32,10 +30,7 @@ export function* getTodoWorker() {
 
 export function* editTodoWorker({ payload }) {
   try {
-    const res = yield axios.put(
-      "http://localhost:3001/todoList/" + payload.id,
-      payload
-    );
+    yield axios.put("http://localhost:3001/todoList/" + payload.id, payload);
     yield put(getTodoList());
   } catch (e) {
     console.log(e);
@@ -44,8 +39,7 @@ export function* editTodoWorker({ payload }) {
 
 export function* deleteTodoWorker({ id }) {
   try {
-    console.log(id);
-    const res = yield axios.delete("http://localhost:3001/todoList/" + id);
+    yield axios.delete("http://localhost:3001/todoList/" + id);
     yield put(getTodoList());
   } catch (e) {
     console.log(e);

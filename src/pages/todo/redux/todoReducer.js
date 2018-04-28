@@ -1,10 +1,4 @@
-import { fromJS, List, Map } from "immutable";
-import {
-  ADD_TODO,
-  GOT_TODO_LIST,
-  ADDED_TODO,
-  EDIT_TODO_SUCCESS
-} from "./todoAction";
+import { ADD_TODO, GOT_TODO_LIST, ADDED_TODO } from "./todoAction";
 
 var initialstate = {
   isLoading: false,
@@ -26,11 +20,9 @@ export default function todoReducer(state = initialstate, action) {
         todos: action.payload,
         isEditing: false
       };
-      console.log(state);
       return state;
     }
     default:
       return state;
   }
-  return state;
 }

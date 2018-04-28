@@ -43,7 +43,6 @@ export function editTodoList(payload) {
 }
 
 export function deleteTodoItem(id) {
-  console.log(id);
   return {
     type: DELETE_TODO_ITEM,
     id

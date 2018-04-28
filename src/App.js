@@ -6,8 +6,6 @@ import store from "./configureStore";
 import { history } from "./history";
 import TodoPage from "./pages/todo/todoContainer";
 
-console.log(history);
-
 class App extends Component {
   render() {
     return (
