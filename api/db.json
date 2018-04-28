@@ -1,28 +1,13 @@
 {
   "todolist": [
     {
-      "id": 3,
-      "todoItem": "new test",
-      "isComplete": true
-    },
-    {
-      "id": 4,
-      "todoItem": "New data yes",
-      "isComplete": true
-    },
-    {
-      "todoItem": "as",
+      "todoItem": "new one now",
       "isComplete": false,
-      "id": 7
+      "id": 1
     },
     {
-      "id": 8,
-      "todoItem": "Test now this",
-      "isComplete": true
-    },
-    {
-      "id": 9,
-      "todoItem": "internet explorer test",
+      "id": 2,
+      "todoItem": "test",
       "isComplete": true
     }
   ]

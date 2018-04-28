@@ -15,6 +15,7 @@ class TodoPage extends Component {
 
     this.state = {
       todoItem: "",
+      openAlert: false,
       todos: []
     };
 
@@ -45,10 +46,15 @@ class TodoPage extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
+
     if (this.state.isEditing) {
       const { editItemId, editItem, isComplete } = this.state;
       this.props.editTodoList({ editItemId, editItem, isComplete });
     } else {
+      if (this.state.todoItem === "") {
+        this.setState({ openAlert: true });
+        return false;
+      }
       this.props.addTodoItem({
         todoItem: this.state.todoItem,
         isComplete: this.props.isComplete
@@ -70,6 +76,8 @@ class TodoPage extends Component {
   onDelete(deleteTodoId) {
     this.props.deleteTodoItem(deleteTodoId);
   }
+
+  onClose = () => this.setState({ openAlert: false });
 
   render() {
     const { todoItem } = this.state;
@@ -173,7 +181,9 @@ class TodoPage extends Component {
               <Table celled striped>
                 <Table.Header>
                   <Table.Row>
-                    <Table.HeaderCell colSpan="3">Todo List</Table.HeaderCell>
+                    <Table.HeaderCell colSpan="3">
+                      Completed Todo List
+                    </Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
